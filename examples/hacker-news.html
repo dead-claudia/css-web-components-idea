@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!--
+# Hacker News
+Ported from Svelte's example. This should exercise most of this proposal.
+-->
+
+<define name="hn-comments">
+    <article class="comment" instanced>
+        <p class="meta">
+            <span class="user"></span> <span class="time-ago"></span>
+        </p>
+        <html-embed></html-embed>
+        <div class="replies">
+            <hn-comments></hn-comments>
+        </div>
+    </article>
+</define>
+
+<define name="item-view">
+    <a class="return-to">&laquo; back</a>
+    <article>
+        <a class="article-link">
+            <h1 class="title"></h1>
+            <small class="domain"></small>
+        </a>
+        <p class="meta">submitted by <span class="user"></span> <span class="time-ago"></span></p>
+    </article>
+    <div class="comments">
+        <hn-comments></hn-comments>
+    </div>
+</define>
+
+<define name="list-view">
+    <p class="loading">Loading...</p>
+    <article class="summary" instanced>
+        <span class="summary-index"></span>
+        <h2><a target="_blank" rel="noreferrer" class="summary-link"></a></h2>
+        <p class="meta"><a class="comment-count"></a> by <span class="user"></span> <span
+                class="time-ago"></span></p>
+    </article>
+    <a class="page-link"></a>
+</define>
+
+<main>
+    <item-view data-route="item"></item-view>
+    <list-view data-route="top"></list-view>
+</main>
+
+<script type="module">
+    customElements.define("html-embed", class extends HTMLElement {
+        static observedAttributes = ["html"]
+
+        #root = this.attachShadow()
+
+        attributeChangedCallback(name, _, newValue) {
+            if (name === "html") {
+                this.#root.innerHTML = value
+            }
+        }
+    })
+
+    const root = document.documentElement
+
+    async function load(url, data) {
+        const response = await fetch(url)
+        const item = await response.json()
+        root.instanceSources.set("item", item)
+        Object.assign(root.dataset, data)
+        window.scrollTo(0, 0)
+    }
+
+    window.hashchange = () => {
+        if (location.hash.startsWith("#/item/")) {
+            const id = location.hash.slice(6)
+            load(`https://node-hnapi.herokuapp.com/item/${id}`, {route: "item"})
+        } else if (location.hash.startsWith("#/top/")) {
+            const page = location.hash.slice(5)
+            load(`https://node-hnapi.herokuapp.com/news?page=${page}`, {route: "top", page})
+        } else {
+            location.hash = "/top/1"
+        }
+    }
+
+    window.onhashchange()
+</script>
+
+<style>
+    @instance item {
+        key: .id;
+        @chain .comments as item;
+    }
+
+    html-embed {
+        display: contents;
+    }
+
+    .meta {
+        color: #999;
+        font-size: 12px;
+        margin: 0 0 1em 0;
+    }
+
+    .comment {
+        border-top: 1px solid #eee;
+        margin: 1em 0 0 0;
+        padding: 1em 0 0 0;
+        font-size: 14px;
+    }
+
+    .user {
+        text: ivalue(item).user;
+    }
+
+    .time-ago {
+        text: format(relative-time calc(wall-time() - 1s * ivalue(item).time));
+    }
+
+    .comment html-embed {
+        attr(html): ivalue(item).content;
+    }
+
+    .replies {
+        padding: 0 0 0 1em;
+    }
+
+    .comment,
+    .summary {
+        instance-source: item;
+        instance-sort: descending;
+        instance-sort-key: .time_ago;
+    }
+
+    .article-link,
+    .summary-link {
+        attr(href): ivalue(item).url;
+    }
+
+    .article-link[ivalue(item).domain=""],
+    .summary-link[ivalue(item).type=ask] {
+        attr(href): "https://news.ycombinator.com/" ivalue(item).url;
+    }
+
+    .return-to {
+        attr(href): "#/top/" var(--page);
+    }
+
+    hn-item-view article {
+        margin: 0 0 1em 0;
+    }
+
+    hn-item-view a {
+        display: block;
+        margin: 0 0 1em 0;
+    }
+
+    hn-item-view h1 {
+        font-size: 1.4em;
+        margin: 0;
+    }
+
+    .summary {
+        position: relative;
+        padding: 0 0 0 2em;
+        border-bottom: 1px solid #eee;
+    }
+
+    .summary h2 {
+        font-size: 1em;
+        margin: 0.5em 0;
+    }
+
+    .summary span {
+        position: absolute;
+        left: 0;
+    }
+
+    .summary-index {
+        text: string(counter(summary-index));
+    }
+
+    .summary-index::before {
+        counter-increment: summary-index;
+    }
+
+    .comment-count {
+        attr(href): "#/item/" ivalue(item).id;
+        text: ivalue(item).comments_count " comments";
+    }
+
+    .comment-count[[ivalue(item).comments_count==1]] {
+        text: ivalue(item).comments_count " comment";
+    }
+
+    hn-list-view {
+        counter-reset: summary-index calc(var(--page, 1) * 20 - 1);
+    }
+
+    hn-list-view a {
+        padding: 2em;
+        display: block;
+    }
+
+    .loading {
+        opacity: 0;
+        animation: 0.4s 0.8s forwards fade-in;
+    }
+
+    :root {
+        --route: attr(data-route);
+        --offset: attr(data-offset);
+    }
+
+    hn-list-view> :where(.loading[ivalue(item)], :not(.loading, [ivalue(item)])),
+    main [data-route]:not([data-route=var(--route)]) {
+        display: none;
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    main {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        min-height: 101vh;
+        padding: 1em;
+    }
+</style>

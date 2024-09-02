@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- https://eugenkiss.github.io/7guis/tasks#timer -->
+
+<label>
+    elapsed time:
+    <progress></progress>
+</label>
+
+<div id="elapsed">0.0s</div>
+
+<label>
+    duration:
+    <input type="range" value="5" min="1" max="20000" />
+</label>
+
+<button id="reset">reset</button>
+
+<style>
+    @property --elapsed {
+        syntax: "<time>";
+        inherited: true;
+        initial-value: 0s;
+    }
+
+    @keyframes timer {
+        0% {
+            --elapsed: 0s;
+        }
+
+        100% {
+            --elapsed: var(--duration);
+        }
+    }
+
+    :root {
+        --duration: 5s;
+        animation: var(--duration) linear forwards timer;
+    }
+
+    progress {
+        attr(max): string(var(--duration));
+        attr(value): string(calc(var(--elapsed) / 1s));
+        text: string(max(100, var(--elapsed) / var(--duration) * 100)) "%";
+    }
+
+    #elapsed {
+        text: string(max(var(--duration), var(--elapsed)), fixed(1));
+    }
+</style>
+
+<script>
+    var root = document.documentElement
+    document.querySelector("input[type=range]").onchange = (ev) => {
+        var elapsed = getComputedStyle(root).getProperty("--elapsed")
+        root.style.setProperty("--duration", `${ev.target.value}s`)
+        root.style.animationDelay = `-${elapsed}`
+    }
+
+    document.querySelector("#reset").onclick = () => {
+        var prev = root.style.animation
+        root.style.animation = "none"
+        root.style.animationDelay = ""
+        void root.outerWidth
+        root.style.animation = prev
+    }
+</script>

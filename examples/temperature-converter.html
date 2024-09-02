@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<script>
+    document.getElementById("f").onclick =
+        document.getElementById("c").onclick = ({target}) => {
+            const {style} = document.documentElement
+            style.setProperty(`--${target.dataset.target}`, target.value, "")
+            style.removeProperty(`--${target.id}`)
+        }
+</script>
+
+<!-- https://eugenkiss.github.io/7guis/tasks/#temp -->
+<input id="c" value="0" data-target="f" type="number"> °C =
+<input id="f" value="32" data-target="c" type="number" /> °F
+
+<style>
+    input {
+        width: 5em;
+    }
+
+    #f {
+        attr(value): string(calc(var(--c) * (9 / 5) + 32));
+        attr(value): string(var(--f));
+    }
+
+    #c {
+        attr(value): string(calc((var(--f) - 32) * (5 / 9)));
+        attr(value): string(var(--c));
+    }
+</style>
