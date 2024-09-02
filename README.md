@@ -2,6 +2,8 @@
 An idea of how to use instancing to define and use CSS Web Components. I've also included a few comparisons with Svelte as the data model is somewhat similar.
 
 > Note: I do *not* rely on https://github.com/w3c/csswg-drafts/issues/10064, though such an if/else in CSS would be extremely powerful when combined with this.
+>
+> Also, please excuse the extremely rough nature of this. I copied all of this from a bunch of bullet point abstract notes I made on my phone over the course of several days, with basically no alteration. Feel free to file issues or pull requests if you need help understanding things.
 
 - [CSS API](./css.md)
 - [HTML API](./html.md)
