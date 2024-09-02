@@ -1,5 +1,5 @@
 # css-web-components-idea
-An idea of how to use instancing to define and use CSS Web Components. I've also included a few comparisons with Svelte as the data model is somewhat similar.
+An idea of how to use instancing to define and use CSS-based Web Components, using a mix of instancing and declarative CSS-level attribute and text assignment. I've also included a few comparisons with Svelte as the data model is somewhat similar.
 
 > Note: I do *not* rely on https://github.com/w3c/csswg-drafts/issues/10064, though such an if/else in CSS would be extremely powerful when combined with this.
 >
