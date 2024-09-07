@@ -76,11 +76,12 @@ This concept also includes `var(...)`s and `attr(...)`s, but no change to wither
   - Impacts the accessibility tree
 - `attr(name unit?): value` causes the specified element attribute to be set with the matched element's namespace.
   - Prefix with `append` to append to whatever the existing value is, rather than replace it. Needed for class modification
-  - This may cause a JS task to be scheduled after animation frame callbacks run, but before paint.
+  - This may cause a JS task to be scheduled after animation frame callbacks run, but before paint. Animation frame callbacks scheduled here are deferred to the next frame ready time.
   - This requires a subsequent style calc pass to resolve if that attribute is matched by other selectors.
   - Selector rules are applied at most once to a given element, to prevent recalc cycles.
   - Animation of this is discrete by default.
   - Invalid in pseudo-elements other than instances.
+  - For security reasons, `eval` is never run on CSS-set attribute values. This both simplifies implementation and blocks certain security vectors.
 - `text: value`: Like `content`, but sets the text and alt text together. It reflects in the accessibility tree, but not in the DOM proper, to avoid mucking with `:has(...)` selectors unpredictably. Invalid in pseudo-elements other than instances.
 
 Use custom properties and property registrations to continuously animate attributes.
