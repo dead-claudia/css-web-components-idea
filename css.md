@@ -73,6 +73,7 @@ This concept also includes `var(...)`s and `attr(...)`s, but no change to wither
   - Impacts the accessibility tree
 - `instance-sort-key: value`: Set the sort key for collection instance values. Default is the value's key. Sorting must be stable.
 - `instance-order: n`: change the instance item order
+  - `n` is a chain expression.
   - Impacts the accessibility tree
 - `attr(name unit?): value` causes the specified element attribute to be set with the matched element's namespace.
   - Prefix with `append` to append to whatever the existing value is, rather than replace it. Needed for class modification
