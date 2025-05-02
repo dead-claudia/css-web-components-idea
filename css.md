@@ -83,7 +83,6 @@ This concept also includes `var(...)`s and `attr(...)`s, but no change to wither
   - Animation of this is discrete by default.
   - Invalid in pseudo-elements other than instances.
   - For security reasons, `eval` is never run on CSS-set attribute values. This both simplifies implementation and blocks certain security vectors.
-- `text: value`: Like `content`, but sets the text and alt text together. It reflects in the accessibility tree, but not in the DOM proper, to avoid mucking with `:has(...)` selectors unpredictably. Invalid in pseudo-elements other than instances.
 
 Use custom properties and property registrations to continuously animate attributes.
 
