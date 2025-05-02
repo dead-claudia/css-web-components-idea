@@ -42,11 +42,11 @@
     progress {
         attr(max): string(var(--duration));
         attr(value): string(calc(var(--elapsed) / 1s));
-        text: string(max(100, var(--elapsed) / var(--duration) * 100)) "%";
+        content: string(max(100, var(--elapsed) / var(--duration) * 100)) "%";
     }
 
     #elapsed {
-        text: string(max(var(--duration), var(--elapsed)), fixed(1));
+        content: string(max(var(--duration), var(--elapsed)), fixed(1));
     }
 </style>
 
