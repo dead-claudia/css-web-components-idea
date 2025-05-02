@@ -36,8 +36,7 @@ This concept also includes `var(...)`s and `attr(...)`s, but no change to wither
   - `fixed`: Convert numbers to a fixed-precision format, impacted by `precision(n)`
   - `integer(value unit? [base(n)]?)`: Converts `value` to a number, optionally from a given base. Fails if `value` isn't a valid integer.
   - `float(value unit?)`: Like `integer(...)` but converts to a float and doesn't allow changing base.
-  - `uppercase(...)`, `lowercase(...)`, and `titlecase(...)` work like `string` but don't
-  - `ident(...)`: Same arguments as `string(...)`, but returns an identifier. Identifiers (including true/false/null) are passed through, and strings are converted to identifiers. If the parameter is anything else or if the string isn't a valid identifier name, it's considered invalid and the referencing property/selector/rule dropped.
+  - `uppercase(...)`, `lowercase(...)`, and `titlecase(...)` work like `string`, but transform their input as well.
   - `format(kind value, language-tag, {options...})`: Do formatting
     - `kind` is the formatting kind
       - date
