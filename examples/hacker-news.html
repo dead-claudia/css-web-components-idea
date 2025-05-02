@@ -110,11 +110,11 @@ Ported from Svelte's example. This should exercise most of this proposal.
     }
 
     .user {
-        text: ivalue(item).user;
+        content: ivalue(item).user;
     }
 
     .time-ago {
-        text: format(relative-time calc(wall-time() - 1s * ivalue(item).time));
+        content: format(relative-time calc(wall-time() - 1s * ivalue(item).time));
     }
 
     .comment html-embed {
@@ -177,7 +177,7 @@ Ported from Svelte's example. This should exercise most of this proposal.
     }
 
     .summary-index {
-        text: string(counter(summary-index));
+        content: string(counter(summary-index));
     }
 
     .summary-index::before {
@@ -186,11 +186,11 @@ Ported from Svelte's example. This should exercise most of this proposal.
 
     .comment-count {
         attr(href): "#/item/" ivalue(item).id;
-        text: ivalue(item).comments_count " comments";
+        content: ivalue(item).comments_count " comments";
     }
 
     .comment-count[[ivalue(item).comments_count==1]] {
-        text: ivalue(item).comments_count " comment";
+        content: ivalue(item).comments_count " comment";
     }
 
     hn-list-view {
